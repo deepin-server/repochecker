@@ -26,12 +26,14 @@ Deepin 软件仓库辅助工具
     -m CHECK_MODE  cb: check broken package. cd: check build depends.
     -f             filter packages
     -d             debug information
+    -s             send mail
 
 选项说明：
 
 + `-m`：检查模式，包括：`cb`，检查软件包的运行依赖；`cd`，检查软件包的构建依赖
 + `-f`：过滤包
 + `-d`：打印调试信息
++ `-s`：发送邮件报告
 
 例如，要检查仓库中软件包的运行依赖，可以执行：
 
