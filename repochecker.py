@@ -2,7 +2,6 @@
 
 import apt
 import apt_pkg
-import apt.debfile
 import platform
 from optparse import OptionParser
 import multiprocessing
@@ -17,7 +16,7 @@ class CheckBroken(object):
         self.work_mode_map = {
             "CHECK_BROKEN": self.check_broken,
             "CHECK_BUILD": self.check_build,
-            "USAGE":self.usage,
+            "USAGE": self.usage,
         }
 
         # system platform
@@ -37,9 +36,6 @@ class CheckBroken(object):
         # debug information
         self.debug = debug
         self.logger = logging.getLogger()
-
-        # checked package
-        self.checked_pkg = multiprocessing.Array('u', self.pkg_cache.depends_count)
 
         # construct record files
         record_file_path = "record.rd"
@@ -82,7 +78,6 @@ class CheckBroken(object):
             2, it should be an not-installed package
         """
         version_list = pkg_package.version_list
-
 
         # get pkg version
         version = version_list[0]
@@ -165,12 +160,8 @@ class CheckBroken(object):
                             if self.debug:
                                 self.logger.info("%s -- missing package" % pkg)
                             continue
-                        if pkg not in self.checked_pkg:
-                            dep_pkg = self.apt_cache[pkg]
-                            dep_pkg.mark_install()
-                            self.checked_pkg.append(pkg)
-                if self.debug:
-                    self.logger.info(self.checked_pkg)
+                        dep_pkg = self.apt_cache[pkg]
+                        dep_pkg.mark_install()
             else:
                 #pkg_name = package.fullname
                 package.mark_install()
@@ -196,10 +187,10 @@ class CheckBroken(object):
 if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option("-m", metavar="CHECK_MODE", dest="check_mode", help="cb: check broken package. cd: check build depends.", type="string", action="store")
-
     parser.add_option("-f", dest="with_filter", action="store_true", help="filter packages")
     parser.add_option("-d", dest="debug", action="store_true", help="debug information")
     (options, args) = parser.parse_args()
+
     logging.basicConfig(level=logging.DEBUG) 
 
     mode = None

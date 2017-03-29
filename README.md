@@ -8,7 +8,7 @@ Deepin 软件仓库辅助工具
 ### 用法
 
     ./repochecker.py
-    Usage: check-depends.py [options]
+    Usage: repochecker.py [options]
 
     Options:
     -h, --help     show this help message and exit
