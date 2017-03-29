@@ -5,6 +5,17 @@ Deepin 软件仓库辅助工具
 
 用来检查仓库中的软件包是否存在依赖问题。
 
+### 配置
+
+如果要接收邮件报告，则可打开 `mail_config.ini`，配置邮箱及密码：
+
+    # 发送者的邮箱
+    send_mail = xxxxx@deepin.com
+    # 发送者邮箱的密码
+    send_mail_pass = xxxxxxxx
+    # 接收者的邮箱，多个使用 , 分隔
+    receive_mail = xxxxx@deepin.com, yyyyyy@deepin.com
+
 ### 用法
 
     ./repochecker.py

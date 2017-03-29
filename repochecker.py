@@ -6,6 +6,10 @@ import platform
 from optparse import OptionParser
 import multiprocessing
 import logging
+import ConfigParser
+import os.path
+import smtplib
+from email.message import Message
 
 class CheckBroken(object):
     """AutoAPT: a series of auto tests for package system"""
@@ -209,3 +213,34 @@ if __name__ == '__main__':
         at = CheckBroken(mode, True, True)
     else:
         at = CheckBroken(mode, True)
+
+    record_file = 'record.rd'
+    if os.path.getsize(record_file) == 0:
+        quit()
+
+    config = ConfigParser.ConfigParser()
+    config.read('mail_config.ini')
+    SEND_MAIL = config.get('default', 'send_mail')
+    SEND_MAIL_PASS = config.get('default', 'send_mail_pass')
+    RECEIVE_MAIL = config.get('default', 'receive_mail')
+
+    msg = Message()
+    msg['From'] = SEND_MAIL
+    msg['To'] = RECEIVE_MAIL
+    msg['Subject'] = 'Deepin Repository Checker Report'
+
+    with open(record_file) as f:
+        lines = f.readlines()
+    lines = [item.strip() for item in lines]
+    lines = list(set(lines))
+    lines.sort()
+    body = '\n'.join(lines)
+    msg.set_payload(body)
+
+    try:
+        smtp = smtplib.SMTP_SSL(host='smtp.exmail.qq.com', port=465)
+        smtp.login(SEND_MAIL, SEND_MAIL_PASS)
+        smtp.sendmail(SEND_MAIL, RECEIVE_MAIL.split(','), msg.as_string())
+        smtp.quit()
+    except smtplib.SMTPServerDisconnected as e:
+        print(e)
